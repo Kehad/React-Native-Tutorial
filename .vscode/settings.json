@@ -1,0 +1,9 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "workbench.editor.mouseBackForwardToNavigate": true,
+  "files.autoSave": "afterDelay",
+  "editor.fontSize": 12
+}
