@@ -29,7 +29,6 @@ export default function App() {
     setCourseGoals((currentGoals) => {
       return currentGoals.filter((goal) => goal.key !== goalId);
     });
-    console.log("delete goal");
   }
 
   return (
