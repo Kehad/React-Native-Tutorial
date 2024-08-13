@@ -10,7 +10,6 @@ import {
 
 function GoalInput(props) {
   const [enteredGoalText, setEnteredGoalText] = useState("");
-  console.log(props);
 
   function goalInputHandler(enteredText) {
     setEnteredGoalText(enteredText);
