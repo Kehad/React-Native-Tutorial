@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   goalText: {
-    color: "white",
+    color: "#fff",
     padding: 8,
   },
 });
