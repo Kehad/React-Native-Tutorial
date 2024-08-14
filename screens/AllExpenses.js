@@ -8,7 +8,7 @@ function AllExpenses() {
     (state) => state.expensesGeneralList.expensesGeneralList
   );
   return (
-    <ExpensesOutput EXPENSES_LIST={DUMMY_EXPENSESLIST }  expensesPeriod="total" fallbackText="There's no expenses found" />
+    <ExpensesOutput EXPENSES_LIST={DUMMY_EXPENSESLIST}  expensesPeriod="total" fallbackText="There's no expenses found" />
   )
 }
 

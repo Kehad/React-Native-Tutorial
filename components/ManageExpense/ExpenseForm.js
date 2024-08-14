@@ -8,14 +8,14 @@ import { GlobalStyles } from "../../constants/styles";
 
 
 function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValue }) {
-  console.log(submitButtonLabel);
+  // console.log(submitButtonLabel);
   const [inputs, setInputs] = useState({
     amount: {
       value: defaultValue ? defaultValue.amount.toString() : "",
       isValid: true,
     },
     date: {
-      value: defaultValue ? defaultValue.date.toISOString().slice(0, 10) : "",
+      value: defaultValue ? getFormattedDate(defaultValues.date) : "",
       isValid: true,
     },
     description: {

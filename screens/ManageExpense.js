@@ -3,15 +3,14 @@ import { StyleSheet, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
 import { GlobalStyles } from "../constants/styles";
-import Button from "../components/UI/Button";
 import IconButton from "../components/UI/IconButton";
 import {
   addExpenses,
   deleteExpenses,
   updateExpenses,
 } from "../store/expense-slice";
-import { generateRandomText } from "../util/date";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { storeExpense } from "../util/http";
 
 function ManageExpense({ route, navigation, EXPENSES_LIST }) {
   const dispatch = useDispatch();
@@ -34,32 +33,13 @@ function ManageExpense({ route, navigation, EXPENSES_LIST }) {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     if (isEditing) {
-      const randomText = generateRandomText(10);
-      // ;
-      console.log(expenseData);
-      let editExpense = {
-        description: "Test",
-        amount: 19.99,
-        date: new Date("2022-05-19"),
-        id: randomText,
-        oldId: editedExpenseId,
-      };
-      // let editExpense = {
-      //   ...expenseData,
-      //     oldId: editedExpenseId,
-      // };
       dispatch(updateExpenses(expenseData));
     } else {
-      // const randomText = generateRandomText(10);
-      // let newExpense = {
-      //   description: "Test!!!!",
-      //   amount: 29.99,
-      //   date: new Date("2022-05-20"),
-      //   id: randomText,
-      // };
-      dispatch(addExpenses(expenseData));
+      // console.log(eenseData);
+      const id = await storeExpense(expenseData)
+      dispatch(addExpenses({expenseData, id:id}));
     }
     navigation.goBack();
   }
