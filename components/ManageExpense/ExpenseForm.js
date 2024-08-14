@@ -3,7 +3,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import Input from "./Input";
 import { useState } from "react";
 import Button from "../UI/Button";
-import { generateRandomText } from "../../util/date";
+import { generateRandomText, getFormattedDate } from "../../util/date";
 import { GlobalStyles } from "../../constants/styles";
 
 
@@ -15,7 +15,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValue }) {
       isValid: true,
     },
     date: {
-      value: defaultValue ? getFormattedDate(defaultValues.date) : "",
+      value: defaultValue ? getFormattedDate(defaultValue.date) : "",
       isValid: true,
     },
     description: {

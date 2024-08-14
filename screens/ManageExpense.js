@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -10,13 +10,18 @@ import {
   updateExpenses,
 } from "../store/expense-slice";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm";
-import { storeExpense } from "../util/http";
+import { deleteExpense, deleteExpenseApi, storeExpense, updateExpense, updateExpenseApi } from "../util/http";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 function ManageExpense({ route, navigation, EXPENSES_LIST }) {
   const dispatch = useDispatch();
   const DUMMY_EXPENSESLIST = useSelector(
     (state) => state.expensesGeneralList.expensesGeneralList
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState();
+
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -34,19 +39,44 @@ function ManageExpense({ route, navigation, EXPENSES_LIST }) {
   }
 
   async function confirmHandler(expenseData) {
-    if (isEditing) {
-      dispatch(updateExpenses(expenseData));
-    } else {
-      // console.log(eenseData);
-      const id = await storeExpense(expenseData)
-      dispatch(addExpenses({expenseData, id:id}));
+    setIsSubmitting(true); 
+    try {
+      if (isEditing) {
+        dispatch(updateExpenses(expenseData)); // for redux store
+        await updateExpenseApi(editedExpenseId, expenseData); // for backend store
+      } else {
+        // console.log(eenseData);
+        const id = await storeExpense(expenseData)
+        dispatch(addExpenses({expenseData, id:id}));
+      }
+      navigation.goBack();
+    } catch (err) {
+      setError('Could not save data - please try again later! ');
+      setIsSubmitting(false);
     }
-    navigation.goBack();
   }
 
-  function deleteExpenseHandler() {
-    navigation.goBack();
-    dispatch(deleteExpenses(editedExpenseId));
+  async function deleteExpenseHandler() {
+    setIsSubmitting(true);
+    try {
+      await deleteExpense(editedExpenseId);
+      expensesCtx.deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setError("Could not delete expense - please try again later!");
+      setIsSubmitting(false);
+    }
+  }
+
+  function errorHandler() {
+    setError(null);
+  }
+
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} />;
+  }
+  if(isSubmitting) {
+    return <LoadingOverlay />
   }
 
   return (

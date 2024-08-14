@@ -5,6 +5,8 @@ import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 import { getDateMinusDays } from "../util/date";
 import { fetchExpenses } from "../util/http";
 import { setExpenses } from "../store/expense-slice";
+import LoadingOverlay from "../components/UI/LoadingOverlay";
+import ErrorOverlay from "../components/UI/ErrorOverlay";
 
 
 function RecentExpenses() {
@@ -14,22 +16,34 @@ function RecentExpenses() {
     (state) => state.expensesGeneralList.expensesGeneralList
   );
 
+  const [isFetching, setIsFetching] = useState(true)
+  const [error, setError] = useState(true);
+
   useEffect(() => {
     async function getExpenses() {
-      const expenses = await fetchExpenses();
-      // console.log('Expense')
-      // console.log(expenses)
-      // console.log('Expensue')
-      dispatch(setExpenses(expenses));
+      setIsFetching(true)
+      try {
+        const expenses = await fetchExpenses();
+        dispatch(setExpenses(expenses));
+      } catch (error) {
+        setError('Could not fetch expenses!')
+      }
+      setIsFetching(false)
     }
 
     getExpenses()
   }, []);
 
-  // console.log('dummy')
-  // console.log(DUMMY_EXPENSESLIST)
-  // console.log('dummy')
+  function errorHandler() {
+    setError(null)
+  }
 
+  if(error && !isFetching) {
+    return <ErrorOverlay message={error}  />
+  }
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
   const recentExpenses = DUMMY_EXPENSESLIST.filter((expense) => {
     const today = new Date();
     const date7DaysAgo = getDateMinusDays(today, 7);
