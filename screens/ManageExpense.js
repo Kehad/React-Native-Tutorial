@@ -11,17 +11,18 @@ import {
   updateExpenses,
 } from "../store/expense-slice";
 import { generateRandomText } from "../util/date";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
 
 function ManageExpense({ route, navigation, EXPENSES_LIST }) {
   const dispatch = useDispatch();
   const DUMMY_EXPENSESLIST = useSelector(
     (state) => state.expensesGeneralList.expensesGeneralList
   );
+
   const editedExpenseId = route.params?.expenseId;
-  const filteredIten = DUMMY_EXPENSESLIST.filter(
-    (expense) => expense.id === editedExpenseId
-  );
   const isEditing = !!editedExpenseId;
+
+  const selectedExpense = DUMMY_EXPENSESLIST.find((expense) => expense.id === editedExpenseId)
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,10 +34,11 @@ function ManageExpense({ route, navigation, EXPENSES_LIST }) {
     navigation.goBack();
   }
 
-  function confirmHandler() {
+  function confirmHandler(expenseData) {
     if (isEditing) {
       const randomText = generateRandomText(10);
-      ;
+      // ;
+      console.log(expenseData);
       let editExpense = {
         description: "Test",
         amount: 19.99,
@@ -44,17 +46,20 @@ function ManageExpense({ route, navigation, EXPENSES_LIST }) {
         id: randomText,
         oldId: editedExpenseId,
       };
-      dispatch(updateExpenses(editExpense));
+      // let editExpense = {
+      //   ...expenseData,
+      //     oldId: editedExpenseId,
+      // };
+      dispatch(updateExpenses(expenseData));
     } else {
-      const randomText = generateRandomText(10);
-      
-      let newExpense = {
-        description: "Test!!!!",
-        amount: 29.99,
-        date: new Date("2022-05-20"),
-        id: randomText,
-      };
-      dispatch(addExpenses(newExpense));
+      // const randomText = generateRandomText(10);
+      // let newExpense = {
+      //   description: "Test!!!!",
+      //   amount: 29.99,
+      //   date: new Date("2022-05-20"),
+      //   id: randomText,
+      // };
+      dispatch(addExpenses(expenseData));
     }
     navigation.goBack();
   }
@@ -66,14 +71,13 @@ function ManageExpense({ route, navigation, EXPENSES_LIST }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttons}>
-        <Button style={styles.button} mode="flat" onPress={cancelHandler}>
-          Cancel
-        </Button>
-        <Button style={styles.button} onPress={confirmHandler}>
-          {isEditing ? "Update" : "Add"}
-        </Button>
-      </View>
+      <ExpenseForm
+        submitButtonLabel={isEditing ? "Update" : "Add"}
+        onCancel={cancelHandler}
+        onSubmit={confirmHandler}
+        defaultValue={selectedExpense}
+      />
+
       {isEditing && (
         <View style={styles.deleteContainer}>
           <IconButton
@@ -96,15 +100,7 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
   },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    minWidth: 120,
-    marginHorizontal: 8,
-  },
+
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,

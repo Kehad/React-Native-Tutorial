@@ -28,6 +28,3 @@ export function generateFormattedDate() {
 
   return `${year}/${month}/${day}`;
 }
-
-
-

@@ -1,5 +1,5 @@
 {
-  "name": "08-ExpensesTracker",
+  "name": "08-HandlingUserInput",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
