@@ -57,7 +57,7 @@ export default function App() {
                 />
               );
             }}
-            keyExtractor={(item, index) => {
+            keyExtractor={(item) => {
               return item.id;
             }}
             alwaysBounceVertical={false}
